@@ -105,29 +105,38 @@ link "$HOME_DIR/.config/git/ignore" "$HOME/.config/git/ignore"
 echo ""
 echo "==> Applying iTerm2 preferences..."
 
-ITERM2_PREFS_SRC="$DOTFILES_DIR/iterm2/com.googlecode.iterm2.plist"
-ITERM2_PREFS_DEST="$HOME/Library/Preferences/com.googlecode.iterm2.plist"
+ITERM2_EXPORT="$DOTFILES_DIR/iterm2/iTerm2 State.itermexport"
+ITERM2_PLIST_SRC="$DOTFILES_DIR/iterm2/com.googlecode.iterm2.plist"
+ITERM2_PLIST_DEST="$HOME/Library/Preferences/com.googlecode.iterm2.plist"
 ITERM2_CUSTOM_FOLDER="$DOTFILES_DIR/iterm2"
 
-if [ -f "$ITERM2_PREFS_SRC" ]; then
-  # Quit iTerm2 if running so it doesn't overwrite prefs on exit
-  if pgrep -x iTerm2 > /dev/null 2>&1; then
-    echo "    Quitting iTerm2 to safely apply preferences..."
-    osascript -e 'quit app "iTerm2"' 2>/dev/null || true
-    sleep 2
-  fi
-
-  # Copy the full plist directly — this applies all settings immediately
-  cp "$ITERM2_PREFS_SRC" "$ITERM2_PREFS_DEST"
-  echo "    [copied] iTerm2 preferences applied"
-
-  # Also tell iTerm2 to keep syncing from this folder going forward
-  defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$ITERM2_CUSTOM_FOLDER"
-  defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
-  echo "    [configured] iTerm2 will sync prefs from: $ITERM2_CUSTOM_FOLDER"
-else
-  echo "    [skip] No iTerm2 plist found in $DOTFILES_DIR/iterm2/"
+# Quit iTerm2 if running so it doesn't overwrite prefs on exit
+if pgrep -x iTerm2 > /dev/null 2>&1; then
+  echo "    Quitting iTerm2 to safely apply preferences..."
+  osascript -e 'quit app "iTerm2"' 2>/dev/null || true
+  sleep 2
 fi
+
+if [ -f "$ITERM2_EXPORT" ]; then
+  # Extract UserDefaults.plist from the .itermexport archive and apply it
+  TMPDIR_ITERM="$(mktemp -d)"
+  tar -xzf "$ITERM2_EXPORT" -C "$TMPDIR_ITERM" 2>/dev/null
+  if [ -f "$TMPDIR_ITERM/user-defaults/UserDefaults.plist" ]; then
+    cp "$TMPDIR_ITERM/user-defaults/UserDefaults.plist" "$ITERM2_PLIST_DEST"
+    echo "    [applied] Full iTerm2 settings from .itermexport"
+  fi
+  rm -rf "$TMPDIR_ITERM"
+elif [ -f "$ITERM2_PLIST_SRC" ]; then
+  cp "$ITERM2_PLIST_SRC" "$ITERM2_PLIST_DEST"
+  echo "    [applied] iTerm2 preferences from plist"
+else
+  echo "    [skip] No iTerm2 preferences found in $DOTFILES_DIR/iterm2/"
+fi
+
+# Tell iTerm2 to keep syncing from this folder going forward
+defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$ITERM2_CUSTOM_FOLDER"
+defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
+echo "    [configured] iTerm2 will sync prefs from: $ITERM2_CUSTOM_FOLDER"
 
 # -----------------------------------------------------------------------------
 echo ""
