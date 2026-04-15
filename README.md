@@ -13,7 +13,6 @@ My terminal configuration for iTerm2 + Oh My Zsh + Powerlevel10k.
 | `home/.config/git/ignore` | Global gitignore |
 | `fonts/` | MesloLGS NF fonts required by Powerlevel10k |
 | `iterm2/iTerm2 State.itermexport` | Full iTerm2 export — profiles, blur, colors, keybindings, font |
-| `iterm2/com.googlecode.iterm2.plist` | iTerm2 preferences plist (XML) |
 | `setup.sh` | Bootstrap script — installs everything automatically |
 
 ## Setup on a new machine
@@ -31,9 +30,13 @@ The script automatically:
 - Installs [Oh My Zsh](https://ohmyz.sh/) (if not already installed)
 - Clones Powerlevel10k, zsh-autosuggestions, zsh-completions, zsh-syntax-highlighting
 - Symlinks all config files from `home/` to `$HOME`
-- Extracts and applies the full iTerm2 export (profiles, blur, colors, font, keybindings)
 
-After the script finishes: **open (or reopen) iTerm2 and open a new tab** — everything will look exactly the same.
+After the script finishes, import the iTerm2 settings manually:
+
+1. Open iTerm2
+2. Go to **Preferences → General → Settings**
+3. Click **Import All Settings and Data...** and select `~/dotfiles/iterm2/iTerm2 State.itermexport`
+4. Quit and reopen iTerm2 — all profiles, colors, blur, font, and keybindings will be applied
 
 ## Keeping configs in sync
 
@@ -43,14 +46,9 @@ Since the files in `$HOME` are symlinks, any edits you make take effect immediat
 
 After changing anything in iTerm2 (blur, colors, profiles, font size, etc.):
 
-1. In iTerm2: **Preferences → General → Preferences → Export All Settings...**
+1. In iTerm2: **Preferences → General → Settings → Export All Settings and Data...**
 2. Save as `iTerm2 State.itermexport` into `~/dotfiles/iterm2/` (overwrite the existing file)
-3. Also re-export the plist for the custom folder sync:
-   ```bash
-   plutil -convert xml1 ~/Library/Preferences/com.googlecode.iterm2.plist \
-     -o ~/dotfiles/iterm2/com.googlecode.iterm2.plist
-   ```
-4. Commit:
+3. Commit:
    ```bash
    cd ~/dotfiles && git add iterm2/ && git commit -m "Update iTerm2 preferences"
    ```
