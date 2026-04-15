@@ -1,0 +1,16 @@
+# Shell cache / history
+.zsh_history
+.zcompdump*
+.zsh_sessions/
+
+# macOS
+.DS_Store
+._*
+
+# Sensitive files — never commit these
+home/.ssh/
+home/.aws/
+home/.gnupg/
+
+# Backup files created by setup.sh
+*.bak

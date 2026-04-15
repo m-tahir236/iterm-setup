@@ -1,0 +1,28 @@
+[http]
+  postBuffer = 524288000
+[user]
+  name   = Tahir Saeed
+  email  = tahirsaeed236@gmail.com
+[github]
+  user   = username
+[alias]
+  a      = add
+  ca     = commit -a
+  cam    = commit -am
+  cm     = commit -m
+  s      = status
+  p      = push
+  pom    = push origin master
+  puom   = pull origin master
+  cob    = checkout -b
+  co     = checkout
+  fp     = fetch --prune --all
+  l      = log --oneline --decorate --graph
+  lall   = log --oneline --decorate --graph --all
+  ls     = log --oneline --decorate --graph --stat
+  lt     = log --graph --decorate --pretty=format:'%C(yellow)%h%Creset%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an%Creset'
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
