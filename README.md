@@ -4,15 +4,16 @@ My terminal configuration for iTerm2 + Oh My Zsh + Powerlevel10k.
 
 ## What's included
 
-| File | Purpose |
+| File/Folder | Purpose |
 |---|---|
 | `home/.zshrc` | Zsh config — plugins, exports, pyenv/nvm/android paths |
 | `home/.p10k.zsh` | Powerlevel10k prompt layout |
 | `home/.gitconfig` | Git aliases and settings |
 | `home/.vimrc` | Vim config |
 | `home/.config/git/ignore` | Global gitignore |
+| `fonts/` | MesloLGS NF fonts required by Powerlevel10k |
 | `iterm2/` | iTerm2 profiles, colors, keybindings |
-| `setup.sh` | Bootstrap script — installs everything and creates symlinks |
+| `setup.sh` | Bootstrap script — installs everything automatically |
 
 ## Setup on a new machine
 
@@ -21,29 +22,24 @@ My terminal configuration for iTerm2 + Oh My Zsh + Powerlevel10k.
 git clone https://github.com/<your-username>/dotfiles ~/dotfiles
 
 # 2. Run bootstrap
-cd ~/dotfiles
-bash setup.sh
+bash ~/dotfiles/setup.sh
 ```
 
-The script will:
-- Install [Oh My Zsh](https://ohmyz.sh/) (if not already installed)
-- Clone Powerlevel10k, zsh-autosuggestions, zsh-completions, zsh-syntax-highlighting
-- Symlink all config files from `home/` to `$HOME` (backs up any existing files as `.bak`)
-- Print instructions for loading iTerm2 preferences
+The script automatically:
+- Installs MesloLGS NF fonts to `~/Library/Fonts/`
+- Installs [Oh My Zsh](https://ohmyz.sh/) (if not already installed)
+- Clones Powerlevel10k, zsh-autosuggestions, zsh-completions, zsh-syntax-highlighting
+- Symlinks all config files from `home/` to `$HOME`
+- Configures iTerm2 to load preferences from `dotfiles/iterm2/` automatically
 
-## iTerm2 setup
+After the script finishes: **restart iTerm2 and open a new tab** — everything will look exactly the same.
 
-After cloning, point iTerm2 to the preferences folder:
+## Keeping configs in sync
 
-1. Open iTerm2 → Preferences → General → Preferences
-2. Check **"Load preferences from a custom folder or URL"**
-3. Set folder to `~/dotfiles/iterm2`
-4. Restart iTerm2
+Since the files in `$HOME` are symlinks, any edits you make take effect immediately in the repo. Just `git add` and commit as usual.
 
-To keep prefs in sync, also enable **"Save changes to folder when iTerm2 quits"**.
-
-## Keeping configs up to date
-
-Since the files in `$HOME` are symlinks, any edits you make take effect immediately in the repo. Just `git add` and `git commit` as usual.
-
-For iTerm2: changes are auto-saved to `dotfiles/iterm2/` when iTerm2 quits (if the setting above is enabled).
+For iTerm2: to save current iTerm2 settings into the repo run:
+```bash
+cp ~/Library/Preferences/com.googlecode.iterm2.plist ~/dotfiles/iterm2/com.googlecode.iterm2.plist
+```
+Or enable **"Save changes to folder when iTerm2 quits"** in iTerm2 → Preferences → General → Preferences.
