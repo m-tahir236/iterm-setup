@@ -100,20 +100,33 @@ link "$HOME_DIR/.vimrc"             "$HOME/.vimrc"
 link "$HOME_DIR/.config/git/ignore" "$HOME/.config/git/ignore"
 
 # -----------------------------------------------------------------------------
-# 5. Configure iTerm2 to load preferences from this repo (no manual step)
+# 5. Apply iTerm2 preferences
 # -----------------------------------------------------------------------------
 echo ""
-echo "==> Configuring iTerm2 preferences folder..."
+echo "==> Applying iTerm2 preferences..."
 
-ITERM2_PREFS="$DOTFILES_DIR/iterm2"
+ITERM2_PREFS_SRC="$DOTFILES_DIR/iterm2/com.googlecode.iterm2.plist"
+ITERM2_PREFS_DEST="$HOME/Library/Preferences/com.googlecode.iterm2.plist"
+ITERM2_CUSTOM_FOLDER="$DOTFILES_DIR/iterm2"
 
-if [ -d "$ITERM2_PREFS" ]; then
-  defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$ITERM2_PREFS"
+if [ -f "$ITERM2_PREFS_SRC" ]; then
+  # Quit iTerm2 if running so it doesn't overwrite prefs on exit
+  if pgrep -x iTerm2 > /dev/null 2>&1; then
+    echo "    Quitting iTerm2 to safely apply preferences..."
+    osascript -e 'quit app "iTerm2"' 2>/dev/null || true
+    sleep 2
+  fi
+
+  # Copy the full plist directly — this applies all settings immediately
+  cp "$ITERM2_PREFS_SRC" "$ITERM2_PREFS_DEST"
+  echo "    [copied] iTerm2 preferences applied"
+
+  # Also tell iTerm2 to keep syncing from this folder going forward
+  defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$ITERM2_CUSTOM_FOLDER"
   defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
-  echo "    iTerm2 will load prefs from: $ITERM2_PREFS"
-  echo "    Restart iTerm2 for this to take effect."
+  echo "    [configured] iTerm2 will sync prefs from: $ITERM2_CUSTOM_FOLDER"
 else
-  echo "    [skip] $ITERM2_PREFS not found"
+  echo "    [skip] No iTerm2 plist found in $DOTFILES_DIR/iterm2/"
 fi
 
 # -----------------------------------------------------------------------------
@@ -121,6 +134,6 @@ echo ""
 echo "==> All done!"
 echo ""
 echo "    Next steps:"
-echo "    1. Restart iTerm2 — it will load your profiles, colors, and font settings"
+echo "    1. Open (or reopen) iTerm2 — all your profiles, blur, colors, and font are applied"
 echo "    2. Open a new terminal tab to activate the Zsh config"
 echo ""

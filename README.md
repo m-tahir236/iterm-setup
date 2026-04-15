@@ -38,8 +38,14 @@ After the script finishes: **restart iTerm2 and open a new tab** — everything 
 
 Since the files in `$HOME` are symlinks, any edits you make take effect immediately in the repo. Just `git add` and commit as usual.
 
-For iTerm2: to save current iTerm2 settings into the repo run:
+### Saving iTerm2 changes
+
+After changing anything in iTerm2 (blur, colors, profiles, font size, etc.), run:
 ```bash
-cp ~/Library/Preferences/com.googlecode.iterm2.plist ~/dotfiles/iterm2/com.googlecode.iterm2.plist
+plutil -convert xml1 ~/Library/Preferences/com.googlecode.iterm2.plist \
+  -o ~/dotfiles/iterm2/com.googlecode.iterm2.plist
+cd ~/dotfiles && git add iterm2/ && git commit -m "Update iTerm2 preferences"
 ```
-Or enable **"Save changes to folder when iTerm2 quits"** in iTerm2 → Preferences → General → Preferences.
+
+Or enable **"Save changes to folder when iTerm2 quits"** in:
+iTerm2 → Preferences → General → Preferences — then it auto-saves to `dotfiles/iterm2/` on every quit.
