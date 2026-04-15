@@ -15,6 +15,11 @@ My terminal configuration for iTerm2 + Oh My Zsh + Powerlevel10k.
 | `iterm2/iTerm2 State.itermexport` | Full iTerm2 export — profiles, blur, colors, keybindings, font |
 | `setup.sh` | Bootstrap script — installs everything automatically |
 
+## Screenshots
+
+![Screenshot 1](screenshots/1.jpg)
+![Screenshot 2](screenshots/2.jpg)
+
 ## Setup on a new machine
 
 ```bash
